@@ -81,28 +81,45 @@
       388582,406106,424486,443772,464016,485274,507604,531071,555741,581687
     ];
 
-    // 🔧 TEMPORAIRE — sera remplacé par Notion API
-    const totalXP = 3500;
+    // Fonction pour mettre à jour l'affichage
+    function updateDisplay(totalXP) {
+      // Calcul du niveau
+      let level = 1;
+      for (let i = 0; i < XP_TABLE.length; i++) {
+        if (totalXP >= XP_TABLE[i]) level = i + 1;
+      }
 
-    // Calcul du niveau
-    let level = 1;
-    for (let i = 0; i < XP_TABLE.length; i++) {
-      if (totalXP >= XP_TABLE[i]) level = i + 1;
+      // Calcul de la progression
+      const currentXP = totalXP - XP_TABLE[level - 1];
+      const nextXP = level < XP_TABLE.length ? XP_TABLE[level] - XP_TABLE[level - 1] : 0;
+      const percent = level >= 100 ? 100 : Math.min((currentXP / nextXP) * 100, 100);
+
+      // Mise à jour de l'interface
+      document.getElementById("levelText").innerText = "Tufting";
+      document.getElementById("levelNumber").innerText = `Niveau ${level}`;
+      
+      // Animation de la barre
+      setTimeout(() => {
+        document.getElementById("barFill").style.width = percent + "%";
+      }, 100);
     }
 
-    // Calcul de la progression
-    const currentXP = totalXP - XP_TABLE[level - 1];
-    const nextXP = level < XP_TABLE.length ? XP_TABLE[level] - XP_TABLE[level - 1] : 0;
-    const percent = level >= 100 ? 100 : Math.min((currentXP / nextXP) * 100, 100);
-
-    // Mise à jour de l'interface
-    document.getElementById("levelText").innerText = "Tufting";
-    document.getElementById("levelNumber").innerText = `Niveau ${level}`;
-    
-    // Animation de la barre
-    setTimeout(() => {
-      document.getElementById("barFill").style.width = percent + "%";
-    }, 100);
+    // Charger les données depuis data.json
+    fetch('data.json')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Erreur de chargement du fichier data.json');
+        }
+        return response.json();
+      })
+      .then(data => {
+        updateDisplay(data.totalXP);
+      })
+      .catch(error => {
+        console.error('Erreur:', error);
+        // Valeur par défaut en cas d'erreur
+        updateDisplay(0);
+      });
   </script>
 </body>
 </html>
