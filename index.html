@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Progression Niveau</title>
+
+  <style>
+    body {
+      font-family: Inter, system-ui, sans-serif;
+      background: transparent;
+      margin: 0;
+      padding: 10px;
+    }
+
+    .level {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .bar {
+      width: 100%;
+      height: 16px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #4ade80, #22c55e);
+      transition: width 0.8s ease;
+    }
+
+    .xp {
+      font-size: 12px;
+      margin-top: 4px;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="level" id="level">Niveau —</div>
+  <div class="bar">
+    <div class="fill" id="fill"></div>
+  </div>
+  <div class="xp" id="xp">XP —</div>
+
+<script>
+const XP_TABLE = [
+  0,20,60,120,200,300,420,560,720,900,
+  1100,1320,1560,1820,2100,2400,2720,3060,3420,3800,
+  4220,4660,5120,5600,6100,14122,15315,16564,17873,19242,
+  20672,22166,23726,25353,27048,28815,30656,32572,34566,36641,
+  38800,41044,43378,45804,48325,50946,53669,56498,59437,62491,
+  65664,68960,72385,75943,79640,83482,87475,91624,95937,100421,
+  105082,109930,114971,120215,125671,131348,137256,143407,149811,156481,
+  163429,170669,178214,186080,194283,202839,211765,221082,230808,240964,
+  251574,262660,274248,286364,299037,312297,326175,340705,355924,371870,
+  388582,406106,424486,443772,464016,485274,507604,531071,555741,581687
+];
+
+// 🔧 TEMPORAIRE — sera remplacé par Notion API
+const totalXP = 3500;
+
+let level = 1;
+for (let i = 0; i < XP_TABLE.length; i++) {
+  if (totalXP >= XP_TABLE[i]) level = i + 1;
+}
+
+const currentXP = totalXP - XP_TABLE[level - 1];
+const nextXP = XP_TABLE[level] - XP_TABLE[level - 1];
+const percent = Math.min((currentXP / nextXP) * 100, 100);
+
+document.getElementById("level").innerText = `Niveau ${level}`;
+document.getElementById("xp").innerText = `${currentXP} / ${nextXP} XP`;
+document.getElementById("fill").style.width = percent + "%";
+</script>
+
+</body>
+</html>
